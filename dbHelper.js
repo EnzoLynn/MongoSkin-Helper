@@ -40,8 +40,11 @@ dbControl.update = function(collectionName, query, update, callback) {
     var db = require('mongoskin').db(uri);
     var sign = guid.raw();
     dbControl.dbPools[sign] = db;
-
-    db.collection(collectionName).update(query, update, false, true,function(err, result) {
+    var def = {
+    	upsert:false,//更新并插入
+    	multi:true,//更新全部 
+    };
+    db.collection(collectionName).update(query, update,def,function(err, result) {
         db.close();
         delete dbControl.dbPools[sign];
         if (err) throw err;
